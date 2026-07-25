@@ -1,0 +1,104 @@
+[
+  {
+    "name": "Dashboard",
+    "link": "/",
+    "icon": "RiDashboardFill",
+    "hasSubmenu": false,
+    "submenu": [
+      {
+        "url": "/",
+        "name": "Dashboard"
+      }
+    ]
+  },
+  {
+    "name": "Agent",
+    "link": "/#",
+    "icon": "FaUsers",
+    "hasSubmenu": true,
+    "submenu": [
+      {
+        "url": "/optimizedHomePage",
+        "name": "Optimized HomePage"
+      },
+      {
+        "url": "/productwiseBusiness",
+        "name": "Productwise Business"
+      },
+      {
+        "url": "/agentwiseBusiness",
+        "name": "Agentwise Business"
+      },
+      {
+        "url": "/welcomeLetter",
+        "name": "Welcome Letter"
+      },
+      {
+        "url": "/myCustomers",
+        "name": "My Customers"
+      },
+      {
+        "url": "/myMembers",
+        "name": "My Members"
+      },
+      {
+        "url": "/renewalPendingList",
+        "name": "Renewal Pending List"
+      },
+      {
+        "url": "/upcomingMaturityList",
+        "name": "Upcoming Maturity List"
+      },
+      {
+        "url": "/investmentProduct",
+        "name": "Investment Product"
+      }
+    ]
+  },
+  {
+    "name": "My Account",
+    "link": "/#",
+    "icon": "FaUser",
+    "hasSubmenu": true,
+    "onlyCustomer": true,
+    "submenu": [
+      {
+        "url": "/savingAccount",
+        "name": "Saving Account"
+      },
+      {
+        "url": "/depositAccount",
+        "name": "Deposit"
+      },
+      {
+        "url": "/shareAcccounts",
+        "name": "Share Accounts"
+      }
+    ]
+  },
+  {
+    "name": "Deposit Account",
+    "link": "/#",
+    "icon": "PiVaultFill",
+    "hasSubmenu": true,
+    "onlyCustomer": true,
+    "submenu": [
+      {
+        "url": "/fix-deposit-account",
+        "name": "Fixed Deposit Account"
+      },
+      {
+        "url": "/recurring-deposit-account",
+        "name": "Recurring Deposit Account"
+      },
+      {
+        "url": "/daily-deposit-account",
+        "name": "DDS Deposit Account"
+      },
+      {
+        "url": "/mip-deposit-account",
+        "name": "MIP Deposit Account"
+      }
+    ]
+  }
+]
