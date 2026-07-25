@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import * as echarts from "echarts";
+import * as echarts from "echarts/core";
+import { GaugeChart } from "echarts/charts";
+import { CanvasRenderer } from "echarts/renderers";
+
+echarts.use([GaugeChart, CanvasRenderer]);
 
 const SpeedoMeter = ({ title, achivedValue, targetValue }) => {
   const chartRef = useRef(null);
