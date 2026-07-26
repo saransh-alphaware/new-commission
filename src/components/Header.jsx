@@ -228,9 +228,13 @@ const Header = ({ isOpen, setIsOpen }) => {
           </div>
 
           {/* Profile Dropdown */}
-          <div className="relative">
+          <div
+            className="relative"
+            onMouseEnter={() => setIsDropdownOpen(true)}
+            onMouseLeave={() => setIsDropdownOpen(false)}
+          >
             <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
               className="w-8 h-8 rounded-full overflow-hidden cursor-pointer flex items-center justify-center bg-brand text-white font-semibold text-sm hover:opacity-90 active:scale-95 transition-all focus:outline-none"
             >
               {userName.charAt(0).toUpperCase()}
@@ -238,24 +242,20 @@ const Header = ({ isOpen, setIsOpen }) => {
 
             {/* Dropdown Menu */}
             {isDropdownOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-45"
-                  onClick={() => setIsDropdownOpen(false)}
-                />
-                <div className="absolute right-0 mt-2.5 w-52 bg-white dark:bg-dark-bg border border-black/10 dark:border-white/10 rounded-xl shadow-xl z-50 overflow-hidden animate-fadeIn transition-colors duration-300">
+              <div className="absolute right-0 top-full pt-2 w-52 z-50">
+                <div className="bg-white dark:bg-dark-bg border border-black/10 dark:border-white/10 rounded-xl shadow-xl overflow-hidden animate-fadeIn transition-colors duration-300">
                   <div className="p-4 bg-brand text-white">
                     <p className="capitalize text-xs font-semibold">{userName}</p>
                     {userId && (
                       <p className="text-[10px] text-white/80 mt-0.5">
-                        Agent #{userId}
+                        {userId}
                       </p>
                     )}
                   </div>
 
                   <div className="p-2 space-y-0.5 flex flex-col">
                     <button
-                      className="w-full text-left px-3 py-2 text-xs text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 rounded transition font-medium"
+                      className="w-full text-left px-3 py-2 text-xs text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 rounded transition font-medium cursor-pointer"
                       onClick={() => {
                         setIsDropdownOpen(false);
                         navigate("/changePassword");
@@ -265,7 +265,7 @@ const Header = ({ isOpen, setIsOpen }) => {
                     </button>
                     {!isCustomer && (
                       <button
-                        className="w-full text-left px-3 py-2 text-xs text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 rounded transition font-medium"
+                        className="w-full text-left px-3 py-2 text-xs text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 rounded transition font-medium cursor-pointer"
                         onClick={() => {
                           setIsDropdownOpen(false);
                           navigate("/");
@@ -275,7 +275,7 @@ const Header = ({ isOpen, setIsOpen }) => {
                       </button>
                     )}
                     <button
-                      className="w-full text-left px-3 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded font-semibold transition"
+                      className="w-full text-left px-3 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded font-semibold transition cursor-pointer"
                       onClick={() => {
                         setIsDropdownOpen(false);
                         setDataModal(true);
@@ -285,7 +285,7 @@ const Header = ({ isOpen, setIsOpen }) => {
                     </button>
                   </div>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>

@@ -157,10 +157,7 @@ const SavingAcccounts = () => {
       },
       options
     );
-    if (response?.cancelled) {
-      setLoading(false);
-      return;
-    }
+    if (response?.cancelled) return;
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let savingAccountData = response?.data?.data;
@@ -407,19 +404,14 @@ const SavingAcccounts = () => {
           />
         </div>
       </div>
-      {loading ? (
-        <div>
-          <LoaderSpinner />
-        </div>
-      ) : (
-        <div className="mx-4 mt-4">
-          <CommonTable
-            headItems={tableHeading}
-            bodyData={bodyData}
-            actions={actions}
-          />
-        </div>
-      )}
+      <div className="mx-4 mt-4">
+        <CommonTable
+          headItems={tableHeading}
+          bodyData={bodyData}
+          actions={actions}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 };

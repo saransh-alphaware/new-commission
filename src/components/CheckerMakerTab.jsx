@@ -149,10 +149,7 @@ const CheckerMakerTab = ({
       },
       options
     );
-    if (response?.cancelled) {
-      setLoading(false);
-      return;
-    }
+    if (response?.cancelled) return;
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let transactionData = response?.data?.data;
@@ -203,10 +200,7 @@ const CheckerMakerTab = ({
       },
       options
     );
-    if (response?.cancelled) {
-      setLoading(false);
-      return;
-    }
+    if (response?.cancelled) return;
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let transactionData = response?.data?.data;

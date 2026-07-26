@@ -6,7 +6,6 @@ import { AuthContext } from "../context/AuthContext";
 import { getServerData } from "../config/apiRequest";
 import { useAbortableEffect } from "../hooks/useAbortableEffect";
 import AccountCard from "../components/AccountCard";
-import LoaderSpinner from "../components/LoaderSpinner";
 import CommonTable from "../components/CommonTable";
 
 function ShareAcccounts() {
@@ -34,10 +33,7 @@ function ShareAcccounts() {
       null,
       options
     );
-    if (response?.cancelled) {
-      setLoading(false);
-      return;
-    }
+    if (response?.cancelled) return;
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let savingAccountData = response?.data?.data;
@@ -98,15 +94,9 @@ function ShareAcccounts() {
           icon={<FaUsers size={20} className="text-white" />}
         />
       </div>
-      {loading ? (
-        <div className="mt-6">
-          <LoaderSpinner />
-        </div>
-      ) : (
-        <div className="mt-6">
-          <CommonTable headItems={tableHeading} bodyData={shareAccountData} loading={loading} />
-        </div>
-      )}
+      <div className="mt-6">
+        <CommonTable headItems={tableHeading} bodyData={shareAccountData} loading={loading} />
+      </div>
     </div>
   );
 }

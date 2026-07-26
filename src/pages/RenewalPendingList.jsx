@@ -8,7 +8,6 @@ import {
 import { useAbortableEffect } from "../hooks/useAbortableEffect";
 import { getServerData } from "../config/apiRequest";
 import { AuthContext } from "../context/AuthContext";
-import LoaderSpinner from "../components/LoaderSpinner";
 import RangeDateSearch from "../components/RangeDateSearch";
 import CommonTable from "../components/CommonTable";
 import Tabs from "../components/Tabs";
@@ -53,6 +52,7 @@ const RenewalPendingList = () => {
           setPageLimit={setPageLimit}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
+          loading={loading}
         />
       ),
     },
@@ -67,13 +67,19 @@ const RenewalPendingList = () => {
           limit={pageLimit}
           setPageLimit={setPageLimit}
           currentPage={currentPage}
+          loading={loading}
           setCurrentPage={setCurrentPage}
         />
       ),
     },
   ];
 
-  const getRenewalData = async (accountType, currentPage, pageLimit, options) => {
+  const getRenewalData = async (
+    accountType,
+    currentPage,
+    pageLimit,
+    options,
+  ) => {
     setLoading(true);
     let response = await getServerData(
       `agents/${agentId}/pendingRdDdsRenewals`,
@@ -85,12 +91,9 @@ const RenewalPendingList = () => {
         pageNumber: currentPage,
         pageSize: pageLimit,
       },
-      options
+      options,
     );
-    if (response?.cancelled) {
-      setLoading(false);
-      return;
-    }
+    if (response?.cancelled) return;
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let transactionData = response?.data?.data;
@@ -146,46 +149,38 @@ const RenewalPendingList = () => {
     setPageLimit(10);
   }, [activeTab]);
 
-  useAbortableEffect((signal) => {
-    if (!hasInitializedRef.current) {
-      hasInitializedRef.current = true;
-      return;
-    }
-    const accountType =
-      activeTab === 1 ? "DDS_ACCOUNT" : "RECURRING_DEPOSIT_ACCOUNT";
-    getRenewalData(accountType, currentPage, pageLimit, { signal });
-  }, [activeTab, currentPage, pageLimit, searchQueryTrigger]);
+  useAbortableEffect(
+    (signal) => {
+      if (!hasInitializedRef.current) {
+        hasInitializedRef.current = true;
+        return;
+      }
+      const accountType =
+        activeTab === 1 ? "DDS_ACCOUNT" : "RECURRING_DEPOSIT_ACCOUNT";
+      getRenewalData(accountType, currentPage, pageLimit, { signal });
+    },
+    [activeTab, currentPage, pageLimit, searchQueryTrigger],
+  );
 
   return (
     <div className="flex flex-col mx-4 text-black dark:text-white">
-      {loading ? (
-        <LoaderSpinner />
-      ) : (
-        <>
-          <div className="flex flex-col gap-x-1 mt-3 w-full md:flex-row md:items-center lg:flex-row lg:items-center">
-            <RangeDateSearch
-              fromDate={fromDate}
-              setFromDate={setFromDate}
-              toDate={toDate}
-              setToDate={setToDate}
-              getSearchData={() => {
-                setCurrentPage(0);
-                setSearchQueryTrigger((prev) => prev + 1);
-              }}
-            />
-          </div>
-          <div className="mt-4">
-            <Tabs
-              tabs={tabs}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-          </div>
-        </>
-      )}
+      <div className="flex flex-col gap-x-1 mt-3 w-full md:flex-row md:items-center lg:flex-row lg:items-center">
+        <RangeDateSearch
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+          getSearchData={() => {
+            setCurrentPage(0);
+            setSearchQueryTrigger((prev) => prev + 1);
+          }}
+        />
+      </div>
+      <div className="mt-4">
+        <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
     </div>
   );
 };
 
 export default RenewalPendingList;
-

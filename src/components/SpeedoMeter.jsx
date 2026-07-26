@@ -207,7 +207,7 @@ const SpeedoMeter = ({ title, achivedValue, targetValue }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-between gap-3 p-3 sm:p-4 rounded-xl bg-white dark:bg-dark-bg shadow-sm transition-all duration-300 w-full min-w-0">
+    <div className="flex flex-col items-center justify-between gap-3 p-3 sm:p-4 bg-white dark:bg-dark-bg transition-all duration-300 w-full min-w-0">
       <div className="text-center text-lg sm:text-xl font-bold text-black dark:text-white transition-colors truncate w-full">
         {title}
       </div>

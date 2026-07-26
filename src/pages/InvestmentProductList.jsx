@@ -61,17 +61,13 @@ function InvestmentProductList() {
 
   return (
     <div className="flex flex-col mx-4 bg-white dark:bg-dark-bg text-black dark:text-white relative min-h-75">
-      {loading ? (
-        <LoaderSpinner />
-      ) : (
-        <div className="mt-4">
-          <CommonTable
-            headItems={tableHeading}
-            bodyData={customerData}
-            loading={loading}
-          />
-        </div>
-      )}
+      <div className="mt-4">
+        <CommonTable
+          headItems={tableHeading}
+          bodyData={customerData}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }

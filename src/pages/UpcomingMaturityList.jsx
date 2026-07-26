@@ -44,12 +44,9 @@ const UpcomingMaturityList = () => {
         toDate: toDate,
         agentId: agentId,
       },
-      options
+      options,
     );
-    if (response?.cancelled) {
-      setLoading(false);
-      return;
-    }
+    if (response?.cancelled) return;
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let transactionData = response?.data?.data;
@@ -92,7 +89,7 @@ const UpcomingMaturityList = () => {
         fromDate: fromDate,
         toDate: toDate,
         refAgentId: agentId,
-      }
+      },
     );
 
     if (response?.value) {
@@ -111,7 +108,7 @@ const UpcomingMaturityList = () => {
         const a = document.createElement("a");
         a.href = downloadUrl;
         a.download = `${formatUserDate(fromDate)} - ${formatUserDate(
-          toDate
+          toDate,
         )} Upcoming Maturity Report.xlsx`;
         document.body.appendChild(a);
         a.click();
@@ -127,60 +124,58 @@ const UpcomingMaturityList = () => {
     setDowloadLoading(false);
   };
 
-  useAbortableEffect((signal) => {
-    getUpcomingMaturityList({ signal });
-  }, [searchQueryTrigger]);
+  useAbortableEffect(
+    (signal) => {
+      getUpcomingMaturityList({ signal });
+    },
+    [searchQueryTrigger],
+  );
 
   return (
     <div className="flex flex-col mx-4 text-black dark:text-white">
-      {loading ? (
-        <LoaderSpinner />
-      ) : (
-        <>
-          <div className="flex flex-col gap-x-1 mt-3 w-full md:flex-row md:items-center lg:flex-row lg:items-center">
-            <RangeDateSearch
-              fromDate={fromDate}
-              setFromDate={setFromDate}
-              toDate={toDate}
-              setToDate={setToDate}
-              getSearchData={() => {
-                setSearchQueryTrigger((prev) => prev + 1);
-              }}
-              toDateValidation={{ min: getCurrentDate() }}
-              fromDateValidation={{ min: getCurrentDate() }}
-            />
-            <div className="flex flex-col mt-2 md:mt-0">
-              <label className="text-sm text-transparent select-none">{"Search"}</label>
-              <button
-                type="button"
-                onClick={() => {
-                  downloadUpcomingMaturityReport();
-                }}
-                disabled={dowloadLoading}
-                className={`flex items-center justify-center gap-2 w-full sm:w-[300px] px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-colors ${
-                  dowloadLoading
-                    ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
-                    : "bg-brand hover:bg-brand/90 cursor-pointer"
-                } focus:outline-none`}
-              >
-                <FaDownload className="hover:text-white" />
-                {dowloadLoading ? "Downloading..." : "Upcoming Maturity Report"}
-              </button>
-            </div>
-          </div>
-          <div className="mt-4">
-            <CommonTable
-              headItems={tableHeading}
-              bodyData={bodyData}
-              isPagination={false}
-              loading={loading}
-            />
-          </div>
-        </>
-      )}
+      <div className="flex flex-col gap-x-1 mt-3 w-full md:flex-row md:items-center lg:flex-row lg:items-center">
+        <RangeDateSearch
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+          getSearchData={() => {
+            setSearchQueryTrigger((prev) => prev + 1);
+          }}
+          toDateValidation={{ min: getCurrentDate() }}
+          fromDateValidation={{ min: getCurrentDate() }}
+        />
+        <div className="flex flex-col mt-2 md:mt-0">
+          <label className="text-sm text-transparent select-none">
+            {"Search"}
+          </label>
+          <button
+            type="button"
+            onClick={() => {
+              downloadUpcomingMaturityReport();
+            }}
+            disabled={dowloadLoading}
+            className={`flex items-center justify-center gap-2 w-full sm:w-[300px] px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-colors ${
+              dowloadLoading
+                ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
+                : "bg-brand hover:bg-brand/90 cursor-pointer"
+            } focus:outline-none`}
+          >
+            <FaDownload className="hover:text-white" />
+            {dowloadLoading ? "Downloading..." : "Upcoming Maturity Report"}
+          </button>
+        </div>
+      </div>
+      <div className="mt-4">
+        <CommonTable
+          headItems={tableHeading}
+          bodyData={bodyData}
+          isPagination={false}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 };
 
 export default UpcomingMaturityList;
-

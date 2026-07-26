@@ -79,7 +79,7 @@ const DepositAccounts = () => {
             statementType === "Statement"
               ? `<div>From Date: ${formatUserDate(
                   fromDate,
-                  "/"
+                  "/",
                 )} To Date: ${formatUserDate(toDate, "/")}</div>`
               : ``
           }
@@ -124,12 +124,9 @@ const DepositAccounts = () => {
         depositAccountType: accountType,
         customerId: customerId,
       },
-      options
+      options,
     );
-    if (response?.cancelled) {
-      setLoading(false);
-      return;
-    }
+    if (response?.cancelled) return;
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let savingAccountData = response?.data?.data;
@@ -138,7 +135,7 @@ const DepositAccounts = () => {
           savingAccountData
             ?.filter(
               (data) =>
-                data?.accountStatus === "ACTIVE" || data?.status === "ACTIVE"
+                data?.accountStatus === "ACTIVE" || data?.status === "ACTIVE",
             )
             ?.map((data) => {
               CAB += data?.balance;
@@ -152,7 +149,7 @@ const DepositAccounts = () => {
                 balance: data?.balance?.toFixed(2) || 0,
                 productName: data?.productName,
               };
-            }) || []
+            }) || [],
         );
         setCombinedAvilableBalance(CAB?.toFixed(2) || 0);
       } else {
@@ -171,7 +168,7 @@ const DepositAccounts = () => {
     toDate,
     id,
     dateBetween,
-    direction = "ASC"
+    direction = "ASC",
   ) => {
     const payload = {
       savingAccount: {
@@ -186,14 +183,10 @@ const DepositAccounts = () => {
     };
     setLoading(true);
     setIsDownloading(true);
-    let response = await postServerData(
-      "passbook-history/record",
-      payload,
-      {
-        pageNumber: currentPage,
-        pageSize: pageLimit,
-      }
-    );
+    let response = await postServerData("passbook-history/record", payload, {
+      pageNumber: currentPage,
+      pageSize: pageLimit,
+    });
     if (response?.value) {
       if (response?.status === 200 || response?.status === 201) {
         let transactionData = response?.data.data;
@@ -212,7 +205,7 @@ const DepositAccounts = () => {
                   data?.particular ||
                     data?.dynamicparticulars ||
                     data?.transactionRemark ||
-                    " "
+                    " ",
                 ).replace(/_/g, " ") || "",
               debit:
                 data?.transactionType === "DEBIT"
@@ -226,7 +219,7 @@ const DepositAccounts = () => {
               Balance:
                 (data?.runningBalanceDerived?.toFixed(2) || 0) + " Cr." || "",
             };
-          }) || []
+          }) || [],
         );
       } else {
         setStatementData([]);
@@ -243,7 +236,13 @@ const DepositAccounts = () => {
   const tabs = [
     {
       label: "FIX ACCOUNTS",
-      content: <CommonTable headItems={tableHeading} bodyData={bodyData} />,
+      content: (
+        <CommonTable
+          headItems={tableHeading}
+          bodyData={bodyData}
+          loading={loading}
+        />
+      ),
     },
     {
       label: "RD ACCOUNTS",
@@ -252,12 +251,19 @@ const DepositAccounts = () => {
           headItems={tableHeading}
           bodyData={bodyData}
           actions={actions}
+          loading={loading}
         />
       ),
     },
     {
       label: "MIP ACCOUNTS",
-      content: <CommonTable headItems={tableHeading} bodyData={bodyData} />,
+      content: (
+        <CommonTable
+          headItems={tableHeading}
+          bodyData={bodyData}
+          loading={loading}
+        />
+      ),
     },
     {
       label: "DDS ACCOUNTS",
@@ -266,6 +272,7 @@ const DepositAccounts = () => {
           headItems={tableHeading}
           bodyData={bodyData}
           actions={actions}
+          loading={loading}
         />
       ),
     },
@@ -292,7 +299,7 @@ const DepositAccounts = () => {
           break;
       }
     },
-    [activeTab]
+    [activeTab],
   );
 
   useEffect(() => {
@@ -340,7 +347,7 @@ const DepositAccounts = () => {
                           toDate,
                           accountDatabaseId,
                           true,
-                          activeTwoTab === "Ascending" ? "ASC" : "DESC"
+                          activeTwoTab === "Ascending" ? "ASC" : "DESC",
                         );
                       }
                     }}
@@ -348,7 +355,9 @@ const DepositAccounts = () => {
                 </div>
               )}
               <div className="flex items-center my-2 space-x-2 md:w-1/2 lg:w-1/2">
-                <label className="text-sm font-medium text-black/80 dark:text-white/80">Order : </label>
+                <label className="text-sm font-medium text-black/80 dark:text-white/80">
+                  Order :{" "}
+                </label>
                 <select
                   name="view"
                   id="view"
@@ -424,18 +433,11 @@ const DepositAccounts = () => {
           />
         </div>
       </div>
-      {loading ? (
-        <div>
-          <LoaderSpinner />
-        </div>
-      ) : (
-        <div className="mx-4 mt-4">
-          <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-      )}
+      <div className="mx-4 mt-4">
+        <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
     </div>
   );
 };
 
 export default DepositAccounts;
-
