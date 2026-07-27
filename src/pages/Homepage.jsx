@@ -9,6 +9,10 @@ import SpeedoMeterChart from "../components/SpeedoMeterChart";
 import { encryptId } from "../utils/cryptoHelper";
 import { getServerData } from "../config/apiRequest";
 import { useAbortableEffect } from "../hooks/useAbortableEffect";
+import {
+  normalizeAccountCountedData,
+  normalizeRenewalBusinessData,
+} from "../utils/responseNormalizer";
 
 function extractNumbers(str) {
   const matches = str.match(/\d+/g);
@@ -221,7 +225,7 @@ function Homepage() {
         if (response?.cancelled) {
           return {};
         }
-        return response?.data;
+        return normalizeAccountCountedData(response?.data);
       }
       if (state === "renew") {
         const response = await getServerData(
@@ -236,39 +240,17 @@ function Homepage() {
           return {};
         }
         if (url.endsWith("renewal-business-byDate")) {
-          const B = {
-            DDS_ACCOUNT: { details: {} },
-            RECURRING_DEPOSIT_ACCOUNT: { details: {} },
-            FIX_ACCOUNT: { details: {} },
-            MIP_ACCOUNT: { details: {} },
+          const normalized = normalizeRenewalBusinessData(response?.data);
+          return {
+            DDS_ACCOUNT: normalized.DDS_ACCOUNT,
+            RECURRING_DEPOSIT_ACCOUNT: normalized.RECURRING_DEPOSIT_ACCOUNT,
+            FIX_ACCOUNT: normalized.FIX_ACCOUNT,
+            MIP_ACCOUNT: normalized.MIP_ACCOUNT,
           };
-
-          const mapping = {
-            DAILY_DEPOSIT: "DDS_ACCOUNT",
-            RECURRING_DEPOSIT: "RECURRING_DEPOSIT_ACCOUNT",
-            FIXED_DEPOSIT: "FIX_ACCOUNT",
-            MONTHLY_INCOME: "MIP_ACCOUNT",
-          };
-
-          if (response?.data?.ACCOUNT_AND_PRODUCT_DETAILS) {
-            for (const [accountType, products] of Object.entries(
-              response?.data?.ACCOUNT_AND_PRODUCT_DETAILS
-            )) {
-              if (mapping[accountType]) {
-                const targetAccount = mapping[accountType];
-                for (const [productName, details] of Object.entries(products)) {
-                  B[targetAccount].details[productName] = details.totalAmount;
-                }
-              }
-            }
-            return B;
-          } else {
-            return {};
-          }
         } else if (
           url.endsWith("renewal-business-byDate-and-children-fetch-v3")
         ) {
-          return response?.data;
+          return normalizeAccountCountedData(response?.data);
         } else {
           return {};
         }

@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import RangeDateSearch from "../components/RangeDateSearch";
 import CommonTable from "../components/CommonTable";
 import { useAbortableEffect } from "../hooks/useAbortableEffect";
+import {
+  normalizeAccountCountedData,
+  normalizeRenewalBusinessData,
+} from "../utils/responseNormalizer";
 
 const MyMembers = () => {
   const { agentId, userDetails } = useContext(AuthContext);
@@ -83,18 +87,14 @@ const MyMembers = () => {
         return {};
       }
 
-      const ddsValue = calculateAccountDetailsSum(
-        newResponse?.data?.DDS_ACCOUNT
-      );
+      const normNew = normalizeAccountCountedData(newResponse?.data);
+
+      const ddsValue = calculateAccountDetailsSum(normNew?.DDS_ACCOUNT);
       const rdValue = calculateAccountDetailsSum(
-        newResponse?.data?.RECURRING_DEPOSIT_ACCOUNT
+        normNew?.RECURRING_DEPOSIT_ACCOUNT
       );
-      const fdValue = calculateAccountDetailsSum(
-        newResponse?.data?.FIX_ACCOUNT
-      );
-      const mipValue = calculateAccountDetailsSum(
-        newResponse?.data?.MIP_ACCOUNT
-      );
+      const fdValue = calculateAccountDetailsSum(normNew?.FIX_ACCOUNT);
+      const mipValue = calculateAccountDetailsSum(normNew?.MIP_ACCOUNT);
 
       const getRenewData = async (url, dateParams) => {
         const renewResponse = await getServerData(
@@ -106,18 +106,17 @@ const MyMembers = () => {
           return {};
         }
         if (flag) {
+          const normRenew = normalizeRenewalBusinessData(renewResponse?.data);
           const calculateRenewSum = (accountType) => {
             return (
               Object?.keys(
-                renewResponse?.data?.ACCOUNT_AND_PRODUCT_DETAILS?.[
-                  accountType
-                ] || {}
+                normRenew?.ACCOUNT_AND_PRODUCT_DETAILS?.[accountType] || {}
               )
                 ?.map(
                   (item) =>
-                    renewResponse?.data?.ACCOUNT_AND_PRODUCT_DETAILS?.[
-                      accountType
-                    ]?.[item]?.totalAmount || 0
+                    normRenew?.ACCOUNT_AND_PRODUCT_DETAILS?.[accountType]?.[
+                      item
+                    ]?.totalAmount || 0
                 )
                 ?.reduce((acc, val) => acc + val, 0) || 0
             );
@@ -135,7 +134,7 @@ const MyMembers = () => {
             personalRenewalFD,
           };
         } else {
-          return renewResponse;
+          return normalizeAccountCountedData(renewResponse?.data);
         }
       };
 
@@ -148,28 +147,28 @@ const MyMembers = () => {
         );
 
         result = {
-          dds: ddsValue + personalRenewalDDS,
-          rd: rdValue + personalRenewalRD,
+          dds: ddsValue + (personalRenewalDDS || 0),
+          rd: rdValue + (personalRenewalRD || 0),
           mip: mipValue,
           fd: fdValue,
           totalCollection:
             ddsValue +
-            personalRenewalDDS +
+            (personalRenewalDDS || 0) +
             rdValue +
-            personalRenewalRD +
+            (personalRenewalRD || 0) +
             mipValue +
             fdValue,
         };
       } else {
-        const renewResponse = await getRenewData(
+        const normRenewGroup = await getRenewData(
           renewUrl,
           `startDate=${creationDate}&endDate=${endDate}`
         );
         const reddsValue = calculateAccountDetailsSum(
-          renewResponse?.data?.DDS_ACCOUNT
+          normRenewGroup?.DDS_ACCOUNT
         );
         const rerdValue = calculateAccountDetailsSum(
-          renewResponse?.data?.RECURRING_DEPOSIT_ACCOUNT
+          normRenewGroup?.RECURRING_DEPOSIT_ACCOUNT
         );
 
         result = {

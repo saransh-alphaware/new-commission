@@ -7,6 +7,10 @@ import { AuthContext } from "../context/AuthContext";
 import RangeDateSearch from "../components/RangeDateSearch";
 import { nanoid } from "../utils/nanoid";
 import { useAbortableEffect } from "../hooks/useAbortableEffect";
+import {
+  normalizeAccountCountedData,
+  normalizeRenewalBusinessData,
+} from "../utils/responseNormalizer";
 
 function extractNew(data) {
   let result = {};
@@ -110,37 +114,35 @@ function ProductwiseBusiness() {
           ),
         ]);
       
-      if(personalNew?.cancelled || personalRenewal?.cancelled || groupNew?.cancelled || groupRenewal?.cancelled){
+      if (
+        personalNew?.cancelled ||
+        personalRenewal?.cancelled ||
+        groupNew?.cancelled ||
+        groupRenewal?.cancelled
+      ) {
         setLoading(false);
         return;
       }
 
-      if (personalRenewal?.data?.ACCOUNT_AND_PRODUCT_DETAILS) {
-        if (
-          personalRenewal?.data?.ACCOUNT_AND_PRODUCT_DETAILS?.MONTHLY_INCOME
-        ) {
-          delete personalRenewal?.data?.ACCOUNT_AND_PRODUCT_DETAILS
-            ?.MONTHLY_INCOME;
-        }
-        if (personalRenewal?.data?.ACCOUNT_AND_PRODUCT_DETAILS?.FIXED_DEPOSIT) {
-          delete personalRenewal?.data?.ACCOUNT_AND_PRODUCT_DETAILS
-            ?.FIXED_DEPOSIT;
-        }
+      const normPersonalNew = normalizeAccountCountedData(personalNew?.data);
+      const normPersonalRenewal = normalizeRenewalBusinessData(personalRenewal?.data);
+      const normGroupNew = normalizeAccountCountedData(groupNew?.data);
+      const normGroupRenewal = normalizeAccountCountedData(groupRenewal?.data);
+
+      if (normPersonalRenewal?.ACCOUNT_AND_PRODUCT_DETAILS) {
+        delete normPersonalRenewal.ACCOUNT_AND_PRODUCT_DETAILS.MONTHLY_INCOME;
+        delete normPersonalRenewal.ACCOUNT_AND_PRODUCT_DETAILS.FIXED_DEPOSIT;
       }
 
-      if (groupRenewal?.data?.MIP_ACCOUNT) {
-        delete groupRenewal?.data?.MIP_ACCOUNT;
-      }
-      if (groupRenewal?.data?.FIX_ACCOUNT) {
-        delete groupRenewal?.data?.FIX_ACCOUNT;
-      }
+      delete normGroupRenewal?.MIP_ACCOUNT;
+      delete normGroupRenewal?.FIX_ACCOUNT;
 
       setProductData(
         tableData(
-          extractNew(personalNew?.data),
-          extractRenewal(personalRenewal?.data?.ACCOUNT_AND_PRODUCT_DETAILS),
-          extractNew(groupNew?.data),
-          extractNew(groupRenewal?.data)
+          extractNew(normPersonalNew),
+          extractRenewal(normPersonalRenewal?.ACCOUNT_AND_PRODUCT_DETAILS),
+          extractNew(normGroupNew),
+          extractNew(normGroupRenewal)
         )
       );
     } catch (error) {
