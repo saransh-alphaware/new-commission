@@ -528,7 +528,7 @@ function Homepage() {
 
   return (
     <div
-      className={`relative w-full min-h-[400px] flex items-center flex-col py-3 text-black dark:text-white transition-colors duration-300 ${
+      className={`relative w-full min-h-100 flex items-center flex-col py-3 text-black dark:text-white transition-colors duration-300 ${
         loading ? "blur-[1px] pointer-events-none" : "blur-none"
       }`}
     >

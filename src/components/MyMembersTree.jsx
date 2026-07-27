@@ -84,24 +84,24 @@ const CustomOrgNode = ({ data }) => {
 
   return (
     <div
-      className={`rounded overflow-hidden border transition-all select-none shadow-xs cursor-pointer w-[155px] h-[56px] flex flex-col justify-between text-center ${
+      className={`rounded overflow-hidden border transition-all select-none shadow-xs cursor-pointer w-38.75 h-14 flex flex-col justify-between text-center ${
         isSelected
           ? "ring-2 ring-yellow-400 border-yellow-400 shadow-sm scale-102"
           : isDeactivated
           ? "border-rose-600"
-          : "border-[#1F2766]"
+          : "border-brand"
       }`}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!opacity-0 !w-0 !h-0 pointer-events-none"
+        className="opacity-0! w-0! h-0! pointer-events-none"
       />
 
       {/* Top Heading */}
       <div
         className={`px-1.5 py-1 text-[10px] font-bold text-white text-wrap uppercase leading-tight ${
-          isDeactivated ? "bg-rose-600" : "bg-[#1F2766]"
+          isDeactivated ? "bg-rose-600" : "bg-brand"
         }`}
       >
         {data.name}
@@ -112,7 +112,7 @@ const CustomOrgNode = ({ data }) => {
         className={`px-1.5 py-1 text-[10px] font-bold bg-white dark:bg-dark-bg text-black dark:text-white border-t ${
           isDeactivated
             ? "border-rose-600 text-rose-700 dark:text-rose-400"
-            : "border-[#1F2766] text-black dark:text-white"
+            : "border-brand text-black dark:text-white"
         }`}
       >
         {data.title}
@@ -121,7 +121,7 @@ const CustomOrgNode = ({ data }) => {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!opacity-0 !w-0 !h-0 pointer-events-none"
+        className="opacity-0! w-0! h-0! pointer-events-none"
       />
     </div>
   );
@@ -333,7 +333,7 @@ const MyMembersTree = ({
         </p>
       )}
 
-      <div className="w-full h-[300px] border border-black/10 dark:border-white/10 rounded-xl bg-white dark:bg-dark-bg overflow-hidden shadow-sm">
+      <div className="w-full h-75 border border-black/10 dark:border-white/10 rounded-xl bg-white dark:bg-dark-bg overflow-hidden shadow-sm">
         {nodes.length > 0 ? (
           <ReactFlowProvider>
             <ReactFlow

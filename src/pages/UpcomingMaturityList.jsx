@@ -155,7 +155,7 @@ const UpcomingMaturityList = () => {
               downloadUpcomingMaturityReport();
             }}
             disabled={dowloadLoading}
-            className={`flex items-center justify-center gap-2 w-full sm:w-[300px] px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-colors ${
+            className={`flex items-center justify-center gap-2 w-full sm:w-75 px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-colors ${
               dowloadLoading
                 ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
                 : "bg-brand hover:bg-brand/90 cursor-pointer"
